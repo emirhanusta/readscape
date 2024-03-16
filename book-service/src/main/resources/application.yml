@@ -12,8 +12,8 @@ spring:
 
 aws:
   access:
-    key: ${AWS_ACCESS_KEY:AKIAUTNNPSL453IC2VVI}
+    key: ${AWS_ACCESS_KEY:test}
   secret:
-    key: ${AWS_SECRET_KEY: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}
+    key: ${AWS_SECRET_KEY:test}
   s3:
-    bucket: ${AWS_S3_BUCKET:readscape}
+    bucket: ${AWS_S3_BUCKET:test}
