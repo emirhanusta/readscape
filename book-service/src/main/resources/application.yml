@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+      url: jdbc:postgresql://localhost:5432/bookDB
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
+
+aws:
+  access:
+    key: ${AWS_ACCESS_KEY:AKIAUTNNPSL453IC2VVI}
+  secret:
+    key: ${AWS_SECRET_KEY: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}
+  s3:
+    bucket: ${AWS_S3_BUCKET:readscape}
