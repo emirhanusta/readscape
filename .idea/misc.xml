@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/author-service" />
     <file type="web" url="file://$PROJECT_DIR$/review-service" />
   </component>
   <component name="MavenProjectsManager">
@@ -11,6 +12,7 @@
         <option value="$PROJECT_DIR$/auth-service/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/account-service/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
