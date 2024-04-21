@@ -4,7 +4,6 @@ import accountservice.dto.AccountRequest;
 import accountservice.dto.AccountResponse;
 import accountservice.exception.AccountNotFoundException;
 import accountservice.model.Account;
-import accountservice.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import accountservice.repository.AccountRepository;
@@ -21,8 +20,6 @@ public class AccountService {
         Account account = Account.builder()
                 .username(accountRequest.username())
                 .email(accountRequest.email())
-                .password(accountRequest.password())
-                .role(Role.User)
                 .build();
         accountRepository.save(account);
         return AccountResponse.from(account);
@@ -36,7 +33,6 @@ public class AccountService {
         Account account = getAccount(id);
         account.setUsername(accountRequest.username());
         account.setEmail(accountRequest.email());
-        account.setPassword(accountRequest.password());
         accountRepository.save(account);
         return AccountResponse.from(account);
     }
