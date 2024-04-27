@@ -12,7 +12,7 @@ spring:
   application:
     name: book-service
 server:
-  port: 8083
+  port: 0
 eureka:
   client:
     service-url:
