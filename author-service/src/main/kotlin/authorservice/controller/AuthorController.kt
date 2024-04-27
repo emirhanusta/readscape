@@ -2,6 +2,7 @@ package authorservice.controller
 
 import authorservice.dto.AuthorRequest
 import authorservice.dto.AuthorResponse
+import authorservice.dto.BookResponse
 import authorservice.service.AuthorService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,6 +19,10 @@ class AuthorController(val authorService: AuthorService) {
     @GetMapping("/{id}")
     fun getAuthorById(@PathVariable id: UUID) : ResponseEntity<AuthorResponse> =
         ResponseEntity.ok(authorService.getById(id))
+
+    @GetMapping("/{id}/books")
+    fun getBooksByAuthor(@PathVariable id: UUID) : ResponseEntity<List<BookResponse>> =
+        authorService.getBooksByAuthor(id)
 
     @PostMapping
     fun saveAuthor(@RequestBody author: AuthorRequest) : ResponseEntity<AuthorResponse> =

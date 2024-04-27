@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "book")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,15 +28,13 @@ public class Book {
     private String title;
     @Nonnull
     private UUID authorId;
-    @Nonnull
-    private String isbn;
     private String description;
     @ElementCollection(targetClass = BookGenres.class)
     @Enumerated(EnumType.STRING)
     private List<BookGenres> genres;
-    private Date publishedDate;
+    private LocalDate publishedDate;
     @CreationTimestamp
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @UpdateTimestamp
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 }

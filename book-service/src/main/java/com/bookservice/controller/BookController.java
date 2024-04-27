@@ -31,6 +31,11 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
+    @GetMapping("/byAuthors/{authorId}")
+    public ResponseEntity<List<BookResponse>> getBooksByAuthorId(@PathVariable UUID authorId) {
+        return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBookById(@PathVariable UUID id, @RequestBody BookRequest book) {
         return ResponseEntity.ok(bookService.updateBookById(id, book));

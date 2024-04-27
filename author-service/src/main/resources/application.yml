@@ -10,7 +10,7 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
   application:
-    name: review-service
+    name: author-service
 eureka:
   client:
     service-url:
