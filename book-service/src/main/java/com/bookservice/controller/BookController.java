@@ -2,6 +2,7 @@ package com.bookservice.controller;
 
 import com.bookservice.dto.BookRequest;
 import com.bookservice.dto.BookResponse;
+import com.bookservice.dto.ReviewResponse;
 import com.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,10 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
     }
 
+    @GetMapping("/{bookId}/reviews")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByBookId(@PathVariable UUID bookId) {
+        return ResponseEntity.ok(bookService.getReviewsByBookId(bookId));
+    }
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBookById(@PathVariable UUID id, @RequestBody BookRequest book) {
         return ResponseEntity.ok(bookService.updateBookById(id, book));

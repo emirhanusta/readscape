@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class ReviewRequest(
     @NotNull
-    val userId: UUID,
+    val accountId: UUID,
     @NotNull
     val bookId: UUID,
     @NotNull

@@ -5,4 +5,6 @@ import reviewservice.model.Review
 import java.util.*
 
 interface ReviewRepository : JpaRepository<Review, UUID>{
+    fun findByBookId(bookId: UUID): MutableList<Review>
+    fun findByAccountId(userId: UUID): MutableList<Review>
 }

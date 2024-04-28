@@ -18,16 +18,22 @@ class ReviewService(val reviewRepository: ReviewRepository) {
     fun getReviewById(id: UUID) = findById(id)
         .let { ReviewResponse.toReviewResponse(it) }
 
+    fun getReviewsByBookId(bookId: UUID): MutableList<ReviewResponse> = reviewRepository.findByBookId(bookId)
+        .map { ReviewResponse.toReviewResponse(it) }
+        .toMutableList()
+
+    fun getReviewsByUserId(userId: UUID): MutableList<ReviewResponse> = reviewRepository.findByAccountId(userId)
+        .map { ReviewResponse.toReviewResponse(it) }
+        .toMutableList()
+
     fun saveReview(review: ReviewRequest) : ReviewResponse {
         val savedReview = reviewRepository.save(
-            Review( userId = review.userId, bookId = review.bookId, rating = review.rating, review = review.review))
+            Review( accountId = review.accountId, bookId = review.bookId, rating = review.rating, review = review.review))
         return ReviewResponse.toReviewResponse(savedReview)
     }
 
     fun updateReview(id: UUID, review: ReviewRequest) : ReviewResponse {
         val existingReview = findById(id)
-        existingReview.userId = review.userId
-        existingReview.bookId = review.bookId
         existingReview.rating = review.rating
         existingReview.review = review.review
         reviewRepository.save(existingReview)

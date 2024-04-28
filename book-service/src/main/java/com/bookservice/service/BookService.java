@@ -1,28 +1,27 @@
 package com.bookservice.service;
 
 import com.bookservice.client.AuthorServiceClient;
+import com.bookservice.client.ReviewServiceClient;
 import com.bookservice.dto.BookRequest;
 import com.bookservice.dto.BookResponse;
+import com.bookservice.dto.ReviewResponse;
 import com.bookservice.exception.BookNotFoundException;
 import com.bookservice.model.Book;
 import com.bookservice.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
     private final S3Service s3Service;
     private final AuthorServiceClient authorServiceClient;
-
-    public BookService(BookRepository bookRepository, S3Service s3Service, AuthorServiceClient authorServiceClient) {
-        this.bookRepository = bookRepository;
-        this.s3Service = s3Service;
-        this.authorServiceClient = authorServiceClient;
-    }
+    private final ReviewServiceClient reviewServiceClient;
 
     public BookResponse addNewBook(BookRequest book) {
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
@@ -55,6 +54,11 @@ public class BookService {
                 .map(BookResponse::toDto)
                 .toList();
     }
+
+    public List<ReviewResponse> getReviewsByBookId(UUID bookId) {
+        return reviewServiceClient.getReviewsByBookId(bookId).getBody();
+    }
+
     public BookResponse updateBookById(UUID id, BookRequest book) {
         Book existingBook = findBookById(id);
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)

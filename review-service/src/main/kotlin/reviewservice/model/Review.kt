@@ -14,8 +14,8 @@ data class Review(
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
         val id: UUID? = null,
-        var userId: UUID,
-        var bookId: UUID,
+        val accountId: UUID,
+        val bookId: UUID,
         var rating: Float,
         var review: String,
         @CreationTimestamp
