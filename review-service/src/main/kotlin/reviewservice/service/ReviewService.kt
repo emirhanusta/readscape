@@ -22,7 +22,7 @@ class ReviewService(val reviewRepository: ReviewRepository) {
         .map { ReviewResponse.toReviewResponse(it) }
         .toMutableList()
 
-    fun getReviewsByUserId(userId: UUID): MutableList<ReviewResponse> = reviewRepository.findByAccountId(userId)
+    fun getReviewsByAccountId(userId: UUID): MutableList<ReviewResponse> = reviewRepository.findByAccountId(userId)
         .map { ReviewResponse.toReviewResponse(it) }
         .toMutableList()
 
