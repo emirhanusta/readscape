@@ -11,8 +11,18 @@ spring:
       driver-class-name: org.postgresql.Driver
   application:
     name: book-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    redis:
+      cache-null-values: true
+
 server:
   port: 0
+
 eureka:
   client:
     service-url:

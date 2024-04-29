@@ -1,6 +1,7 @@
 package com.bookservice.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,15 +45,22 @@ public class S3Service {
         if (id == null) {
             throw new RuntimeException("Id cannot be null");
         }
-        deleteFile(id + ".png");
+        if (getFile(id + ".png") != null) {
+            deleteFile(id + ".png");
+        }
+        log.info("File not found in S3");
     }
     private void uploadFile(String key, MultipartFile file) throws IOException {
         var putObjectResult = s3Client.putObject(bucketName, key, file.getInputStream(), null);
         log.info(putObjectResult.getMetadata());
     }
     private S3Object getFile(String key) {
-        log.info("Getting file from S3");
-        return s3Client.getObject(bucketName, key);
+        try {
+            return s3Client.getObject(bucketName, key);
+        } catch (AmazonS3Exception e) {
+            log.error("File with key " + key + " not found in S3 bucket");
+            return null;
+        }
     }
 
 

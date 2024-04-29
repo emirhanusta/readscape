@@ -9,6 +9,9 @@ import com.bookservice.exception.BookNotFoundException;
 import com.bookservice.model.Book;
 import com.bookservice.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,7 @@ public class BookService {
     private final AuthorServiceClient authorServiceClient;
     private final ReviewServiceClient reviewServiceClient;
 
+    @CachePut(value = "book", key = "#result.id")
     public BookResponse addNewBook(BookRequest book) {
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
         Book newBook = Book.builder()
@@ -36,10 +40,12 @@ public class BookService {
         return BookResponse.toDto(newBook);
     }
 
+    @Cacheable(value = "book", key = "#id")
     public BookResponse getBookById(UUID id) {
         return BookResponse.toDto(findBookById(id));
     }
 
+    @Cacheable(value = "book")
     public List<BookResponse> getAllBooks() {
         return bookRepository.findAll()
                 .stream()
@@ -59,6 +65,7 @@ public class BookService {
         return reviewServiceClient.getReviewsByBookId(bookId).getBody();
     }
 
+    @CacheEvict(value = "book", key = "#id")
     public BookResponse updateBookById(UUID id, BookRequest book) {
         Book existingBook = findBookById(id);
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
@@ -71,6 +78,7 @@ public class BookService {
         return BookResponse.toDto(existingBook);
     }
 
+    @CacheEvict(value = "book", key = "#id")
     public void deleteBookById(UUID id) {
         findBookById(id); // check if book exists (throws exception if not found)
         s3Service.deleteImage(id);
