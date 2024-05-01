@@ -21,7 +21,7 @@ class ReviewController(val reviewService: ReviewService) {
     fun getReviewsByBookId(@PathVariable bookId: UUID): ResponseEntity<MutableList<ReviewResponse>> = ResponseEntity.ok(reviewService.getReviewsByBookId(bookId))
 
     @GetMapping("/account/{accountId}")
-    fun getReviewsByUserId(@PathVariable accountId: UUID): ResponseEntity<MutableList<ReviewResponse>> = ResponseEntity.ok(reviewService.getReviewsByAccountId(accountId))
+    fun getReviewsByAccountId(@PathVariable accountId: UUID): ResponseEntity<MutableList<ReviewResponse>> = ResponseEntity.ok(reviewService.getReviewsByAccountId(accountId))
 
     @PostMapping
     fun saveReview(@RequestBody review: ReviewRequest): ResponseEntity<ReviewResponse> = ResponseEntity.ok(reviewService.saveReview(review))
