@@ -48,7 +48,6 @@ public class S3Service {
         if (getFile(id + ".png") != null) {
             deleteFile(id + ".png");
         }
-        log.info("File not found in S3");
     }
     private void uploadFile(String key, MultipartFile file) throws IOException {
         var putObjectResult = s3Client.putObject(bucketName, key, file.getInputStream(), null);
@@ -58,7 +57,7 @@ public class S3Service {
         try {
             return s3Client.getObject(bucketName, key);
         } catch (AmazonS3Exception e) {
-            log.error("File with key " + key + " not found in S3 bucket");
+            log.error("An error occurred while getting file from S3 bucket with key: " + key);
             return null;
         }
     }
