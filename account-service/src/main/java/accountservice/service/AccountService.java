@@ -45,6 +45,7 @@ public class AccountService {
     }
 
     public void deleteAccount(UUID id) {
+        reviewServiceClient.deleteReviewsByAccountId(id);
         accountRepository.delete(getAccount(id));
     }
 

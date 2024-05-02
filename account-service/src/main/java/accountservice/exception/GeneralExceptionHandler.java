@@ -13,4 +13,9 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAccountNotFoundException(AccountNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+        return new ResponseEntity<>(ex.getExceptionMessage(), HttpStatus.NOT_FOUND);
+    }
 }
