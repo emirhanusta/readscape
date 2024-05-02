@@ -39,6 +39,7 @@ class AuthorService(val authorRepository: AuthorRepository, val bookServiceClien
     }
 
     fun deleteAuthor(id: UUID) {
+        bookServiceClient.deleteBooksByAuthorId(id) // Delete books by author
         val existingAuthor = findById(id)
         authorRepository.delete(existingAuthor)
     }
