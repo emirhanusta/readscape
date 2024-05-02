@@ -15,6 +15,6 @@ class GeneralExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Any> {
-        return ResponseEntity.status(404).body(Objects.requireNonNull(ex.getMessage()))
+        return ResponseEntity.status(404).body(Objects.requireNonNull(ex.getMessage().message))
     }
 }

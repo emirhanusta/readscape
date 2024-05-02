@@ -1,5 +1,6 @@
 package reviewservice.service
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import reviewservice.client.AccountServiceClient
 import reviewservice.client.BookServiceClient
@@ -22,13 +23,19 @@ class ReviewService(val reviewRepository: ReviewRepository,
     fun getReviewById(id: UUID) = findById(id)
         .let { ReviewResponse.toReviewResponse(it) }
 
-    fun getReviewsByBookId(bookId: UUID): MutableList<ReviewResponse> = reviewRepository.findByBookId(bookId)
-        .map { ReviewResponse.toReviewResponse(it) }
-        .toMutableList()
+    fun getReviewsByBookId(bookId: UUID): MutableList<ReviewResponse> {
+        bookServiceClient.getBookById(bookId) // Check if book exists
+        return reviewRepository.findByBookId(bookId)
+            .map { ReviewResponse.toReviewResponse(it) }
+            .toMutableList()
+    }
 
-    fun getReviewsByAccountId(userId: UUID): MutableList<ReviewResponse> = reviewRepository.findByAccountId(userId)
-        .map { ReviewResponse.toReviewResponse(it) }
-        .toMutableList()
+    fun getReviewsByAccountId(userId: UUID): MutableList<ReviewResponse> {
+        accountServiceClient.getAccountById(userId) // Check if account exists
+        return reviewRepository.findByAccountId(userId)
+            .map { ReviewResponse.toReviewResponse(it) }
+            .toMutableList()
+    }
 
     fun saveReview(review: ReviewRequest) : ReviewResponse {
         bookServiceClient.getBookById(review.bookId) // Check if book exists
@@ -51,6 +58,17 @@ class ReviewService(val reviewRepository: ReviewRepository,
         reviewRepository.delete(existingReview)
     }
 
+    @Transactional
+    fun deleteReviewsByBookId(bookId: UUID) {
+        bookServiceClient.getBookById(bookId) // Check if book exists
+        reviewRepository.deleteAllByBookId(bookId)
+    }
+
+    @Transactional
+    fun deleteReviewsByAccountId(userId: UUID) {
+        accountServiceClient.getAccountById(userId) // Check if account exists
+        reviewRepository.deleteAllByAccountId(userId)
+    }
     fun findById(id: UUID): Review {
         return reviewRepository.findById(id).orElseThrow { throw ReviewNotFoundException("Review not found with id: $id") }
     }

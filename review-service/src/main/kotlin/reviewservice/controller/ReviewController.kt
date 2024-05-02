@@ -30,5 +30,11 @@ class ReviewController(val reviewService: ReviewService) {
     fun updateReview(@PathVariable id: UUID, @RequestBody review: ReviewRequest): ResponseEntity<ReviewResponse> = ResponseEntity.ok(reviewService.updateReview(id, review))
 
     @DeleteMapping("/{id}")
-    fun deleteReview(@PathVariable id: UUID) = reviewService.deleteReview(id)
+    fun deleteReview(@PathVariable id: UUID) = ResponseEntity.ok(reviewService.deleteReview(id))
+
+    @DeleteMapping("/book/{bookId}")
+    fun deleteReviewsByBookId(@PathVariable bookId: UUID) = ResponseEntity.ok(reviewService.deleteReviewsByBookId(bookId))
+
+    @DeleteMapping("/account/{accountId}")
+    fun deleteReviewsByAccountId(@PathVariable accountId: UUID) = ResponseEntity.ok(reviewService.deleteReviewsByAccountId(accountId))
 }

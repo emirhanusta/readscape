@@ -22,7 +22,7 @@ class RetreiveMessageErrorDecoder : ErrorDecoder {
                             response.headers()["date"]?.toString(),
                             response.status(),
                             HttpStatus.resolve(response.status())!!.reasonPhrase,
-                            IOUtils.toString(body.asInputStream(), StandardCharsets.UTF_8),
+                            IOUtils.toString(response.body().asInputStream(), StandardCharsets.UTF_8),
                             response.request().url()
                         )
                     }
