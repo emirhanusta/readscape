@@ -32,7 +32,7 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
-    @GetMapping("/byAuthors/{authorId}")
+    @GetMapping("/author/{authorId}")
     public ResponseEntity<List<BookResponse>> getBooksByAuthorId(@PathVariable UUID authorId) {
         return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
     }
@@ -48,6 +48,12 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBookById(@PathVariable UUID id) {
         bookService.deleteBookById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/author/{authorId}")
+    public ResponseEntity<Void> deleteBooksByAuthorId(@PathVariable UUID authorId) {
+        bookService.deleteBooksByAuthorId(authorId);
         return ResponseEntity.noContent().build();
     }
 }

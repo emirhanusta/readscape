@@ -8,6 +8,7 @@ import com.bookservice.dto.ReviewResponse;
 import com.bookservice.exception.BookNotFoundException;
 import com.bookservice.model.Book;
 import com.bookservice.repository.BookRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -81,8 +82,15 @@ public class BookService {
     @CacheEvict(value = "book", key = "#id")
     public void deleteBookById(UUID id) {
         findBookById(id); // check if book exists (throws exception if not found)
+        reviewServiceClient.deleteReviewsByBookId(id);
         s3Service.deleteImage(id);
         bookRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteBooksByAuthorId(UUID authorId) {
+        authorServiceClient.getAuthorById(authorId); // check if author exists (throws exception if not found)
+        bookRepository.deleteByAuthorId(authorId);
     }
 
     private Book findBookById(UUID id) {

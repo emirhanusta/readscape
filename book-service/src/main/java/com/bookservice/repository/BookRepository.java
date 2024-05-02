@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface BookRepository extends JpaRepository<Book, UUID> {
     List<Book> findByAuthorId(UUID authorId);
+
+    void deleteByAuthorId(UUID authorId);
 }
