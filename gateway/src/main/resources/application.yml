@@ -1,6 +1,9 @@
 spring:
   application:
     name: gateway
+  zipkin:
+    base-url: http://localhost:9411
+
   cloud:
     gateway:
       routes:
@@ -36,3 +39,8 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

@@ -7,6 +7,8 @@ import accountservice.dto.ReviewResponse;
 import accountservice.exception.AccountNotFoundException;
 import accountservice.model.Account;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import accountservice.repository.AccountRepository;
 
@@ -17,10 +19,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AccountService {
 
+    Logger logger = LoggerFactory.getLogger(AccountService.class);
+
     private final AccountRepository accountRepository;
     private final ReviewServiceClient reviewServiceClient;
 
     public AccountResponse createAccount(AccountRequest accountRequest) {
+        logger.info("Creating account : {}", accountRequest);
         Account account = Account.builder()
                 .username(accountRequest.username())
                 .email(accountRequest.email())
@@ -30,13 +35,16 @@ public class AccountService {
     }
 
     public AccountResponse getAccountById(UUID id) {
+        logger.info("Getting account by id : {}", id);
         return AccountResponse.from(getAccount(id));
     }
 
     public List<ReviewResponse> getReviewsByAccountId(UUID accountId) {
+        logger.info("Getting reviews by account id : {}", accountId);
         return reviewServiceClient.getReviewsByAccountId(accountId).getBody();
     }
     public AccountResponse updateAccount(UUID id, AccountRequest accountRequest) {
+        logger.info("Updating account with id : {} and request : {}", id, accountRequest);
         Account account = getAccount(id);
         account.setUsername(accountRequest.username());
         account.setEmail(accountRequest.email());
@@ -45,6 +53,7 @@ public class AccountService {
     }
 
     public void deleteAccount(UUID id) {
+        logger.info("Deleting account with id : {}", id);
         reviewServiceClient.deleteReviewsByAccountId(id);
         accountRepository.delete(getAccount(id));
     }

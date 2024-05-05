@@ -10,6 +10,8 @@ import com.bookservice.model.Book;
 import com.bookservice.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BookService {
 
+    Logger log = LoggerFactory.getLogger(BookService.class);
+
     private final BookRepository bookRepository;
     private final S3Service s3Service;
     private final AuthorServiceClient authorServiceClient;
@@ -29,6 +33,7 @@ public class BookService {
 
     @CachePut(value = "book", key = "#result.id")
     public BookResponse addNewBook(BookRequest book) {
+        log.info("Adding new book; {}", book);
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
         Book newBook = Book.builder()
                 .authorId(book.authorId())
@@ -43,11 +48,13 @@ public class BookService {
 
     @Cacheable(value = "book", key = "#id")
     public BookResponse getBookById(UUID id) {
+        log.info("Fetching book with id: {}", id);
         return BookResponse.toDto(findBookById(id));
     }
 
     @Cacheable(value = "book")
     public List<BookResponse> getAllBooks() {
+        log.info("Fetching all books");
         return bookRepository.findAll()
                 .stream()
                 .map(BookResponse::toDto)
@@ -55,6 +62,7 @@ public class BookService {
     }
 
     public List<BookResponse> getBooksByAuthorId(UUID authorId) {
+        log.info("Fetching books by author with id: {}", authorId);
         authorServiceClient.getAuthorById(authorId); // check if author exists (throws exception if not found)
         return bookRepository.findByAuthorId(authorId)
                 .stream()
@@ -63,11 +71,13 @@ public class BookService {
     }
 
     public List<ReviewResponse> getReviewsByBookId(UUID bookId) {
+        log.info("Fetching reviews by book with id: {}", bookId);
         return reviewServiceClient.getReviewsByBookId(bookId).getBody();
     }
 
     @CacheEvict(value = "book", key = "#id")
     public BookResponse updateBookById(UUID id, BookRequest book) {
+        log.info("Updating book with id: {}", id);
         Book existingBook = findBookById(id);
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
         existingBook.setAuthorId(book.authorId());
@@ -81,6 +91,7 @@ public class BookService {
 
     @CacheEvict(value = "book", key = "#id")
     public void deleteBookById(UUID id) {
+        log.info("Deleting book with id: {}", id);
         findBookById(id); // check if book exists (throws exception if not found)
         reviewServiceClient.deleteReviewsByBookId(id);
         s3Service.deleteImage(id);
@@ -89,6 +100,7 @@ public class BookService {
 
     @Transactional
     public void deleteBooksByAuthorId(UUID authorId) {
+        log.info("Deleting books by author with id: {}", authorId);
         authorServiceClient.getAuthorById(authorId); // check if author exists (throws exception if not found)
         bookRepository.deleteByAuthorId(authorId);
     }

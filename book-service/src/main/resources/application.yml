@@ -11,7 +11,8 @@ spring:
       driver-class-name: org.postgresql.Driver
   application:
     name: book-service
-
+  zipkin:
+    base-url: http://localhost:9411
   data:
     redis:
       host: localhost
@@ -38,3 +39,8 @@ aws:
     key: ${AWS_SECRET_KEY:test}
   s3:
     bucket: ${AWS_S3_BUCKET:readscape}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

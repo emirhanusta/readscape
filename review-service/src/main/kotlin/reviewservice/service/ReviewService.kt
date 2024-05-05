@@ -1,6 +1,7 @@
 package reviewservice.service
 
 import jakarta.transaction.Transactional
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import reviewservice.client.AccountServiceClient
 import reviewservice.client.BookServiceClient
@@ -16,14 +17,22 @@ class ReviewService(val reviewRepository: ReviewRepository,
                     val bookServiceClient: BookServiceClient,
                     val accountServiceClient: AccountServiceClient) {
 
-    fun getAllReviews(): MutableList<ReviewResponse> = reviewRepository.findAll()
-        .map { ReviewResponse.toReviewResponse(it) }
-        .toMutableList()
+    private val logger = LoggerFactory.getLogger(ReviewService::class.java)
+    fun getAllReviews(): MutableList<ReviewResponse> {
+        logger.info("Fetching all reviews")
+        return reviewRepository.findAll()
+            .map { ReviewResponse.toReviewResponse(it) }
+            .toMutableList()
+    }
 
-    fun getReviewById(id: UUID) = findById(id)
-        .let { ReviewResponse.toReviewResponse(it) }
+    fun getReviewById(id: UUID): ReviewResponse{
+        logger.info("Fetching review with id: $id")
+        return findById(id)
+            .let { ReviewResponse.toReviewResponse(it) }
+    }
 
     fun getReviewsByBookId(bookId: UUID): MutableList<ReviewResponse> {
+        logger.info("Fetching reviews for book with id: $bookId")
         bookServiceClient.getBookById(bookId) // Check if book exists
         return reviewRepository.findByBookId(bookId)
             .map { ReviewResponse.toReviewResponse(it) }
@@ -31,6 +40,7 @@ class ReviewService(val reviewRepository: ReviewRepository,
     }
 
     fun getReviewsByAccountId(userId: UUID): MutableList<ReviewResponse> {
+        logger.info("Fetching reviews for account with id: $userId")
         accountServiceClient.getAccountById(userId) // Check if account exists
         return reviewRepository.findByAccountId(userId)
             .map { ReviewResponse.toReviewResponse(it) }
@@ -38,6 +48,7 @@ class ReviewService(val reviewRepository: ReviewRepository,
     }
 
     fun saveReview(review: ReviewRequest) : ReviewResponse {
+        logger.info("Saving review : $review")
         bookServiceClient.getBookById(review.bookId) // Check if book exists
         accountServiceClient.getAccountById(review.accountId) // Check if account exists
         val savedReview = reviewRepository.save(
@@ -46,6 +57,7 @@ class ReviewService(val reviewRepository: ReviewRepository,
     }
 
     fun updateReview(id: UUID, review: ReviewRequest) : ReviewResponse {
+        logger.info("Updating review with id: $id")
         val existingReview = findById(id)
         existingReview.rating = review.rating
         existingReview.review = review.review
@@ -54,18 +66,21 @@ class ReviewService(val reviewRepository: ReviewRepository,
     }
 
     fun deleteReview(id: UUID) {
+        logger.info("Deleting review with id: $id")
         val existingReview = findById(id)
         reviewRepository.delete(existingReview)
     }
 
     @Transactional
     fun deleteReviewsByBookId(bookId: UUID) {
+        logger.info("Deleting reviews for book with id: $bookId")
         bookServiceClient.getBookById(bookId) // Check if book exists
         reviewRepository.deleteAllByBookId(bookId)
     }
 
     @Transactional
     fun deleteReviewsByAccountId(userId: UUID) {
+        logger.info("Deleting reviews for account with id: $userId")
         accountServiceClient.getAccountById(userId) // Check if account exists
         reviewRepository.deleteAllByAccountId(userId)
     }

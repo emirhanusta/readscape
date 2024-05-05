@@ -11,6 +11,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   application:
     name: review-service
+  zipkin:
+    base-url: http://localhost:9411
 eureka:
   client:
     service-url:
@@ -20,3 +22,8 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 server:
   port: 0
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

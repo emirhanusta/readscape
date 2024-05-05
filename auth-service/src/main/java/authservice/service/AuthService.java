@@ -9,6 +9,8 @@ import authservice.model.Role;
 import authservice.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,12 +21,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     private final UserService userService;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     public UserResponse register(RegisterRequest request) {
+        logger.info("Registering user: {}", request);
         log.info("Registering user: {}", request.username());
         if (userService.existsByUsername(request.username())) {
             throw new UserAlreadyExistException("Username already exists");
@@ -37,6 +41,7 @@ public class AuthService {
     }
 
     public TokenResponse login(LoginRequest request) {
+        logger.info("Logging in user: {}", request);
         UserResponse userResponse = userService.findByUsername(request.username());
         try {
             authenticationManager.authenticate(
