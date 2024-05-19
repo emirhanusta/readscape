@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: notification-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/notificationDB
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 0
+
+kafka:
+  host: localhost:9092
+  topics:
+    review-created:
+      topic: review_service.user_created.0
+      consumerGroup: ${spring.application.name}-review-created-consumer
+      replicationFactor: 1
+      retentionInMs: 604800000
