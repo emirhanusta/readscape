@@ -2,20 +2,28 @@ package reviewservice.service
 
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
+import org.springframework.messaging.support.GenericMessage
 import org.springframework.stereotype.Service
 import reviewservice.client.AccountServiceClient
 import reviewservice.client.BookServiceClient
+import reviewservice.config.KafkaProducer
+import reviewservice.config.ReviewCreatedTopicProperties
+import reviewservice.dto.ReviewCreatedPayload
 import reviewservice.dto.ReviewRequest
 import reviewservice.dto.ReviewResponse
 import reviewservice.exception.ReviewNotFoundException
 import reviewservice.model.Review
 import reviewservice.repository.ReviewRepository
+import reviewservice.utils.KafkaConstants
 import java.util.*
 
 @Service
 class ReviewService(val reviewRepository: ReviewRepository,
                     val bookServiceClient: BookServiceClient,
-                    val accountServiceClient: AccountServiceClient) {
+                    val accountServiceClient: AccountServiceClient,
+                    val kafkaProducer: KafkaProducer,
+                    val reviewCreatedTopicProperties: ReviewCreatedTopicProperties) {
+
 
     private val logger = LoggerFactory.getLogger(ReviewService::class.java)
     fun getAllReviews(): MutableList<ReviewResponse> {
@@ -53,6 +61,14 @@ class ReviewService(val reviewRepository: ReviewRepository,
         accountServiceClient.getAccountById(review.accountId) // Check if account exists
         val savedReview = reviewRepository.save(
             Review( accountId = review.accountId, bookId = review.bookId, rating = review.rating, review = review.review))
+        // send message to consumer
+        val payload = ReviewCreatedPayload.toReviewCreatedPayload(savedReview)
+        val headers = mutableMapOf<String, Any>(
+            KafkaConstants.TOPIC to reviewCreatedTopicProperties.topicName,
+            KafkaConstants.MESSAGE_KEY to savedReview.id.toString()
+        )
+        kafkaProducer.sendMessage(GenericMessage(payload, headers))
+
         return ReviewResponse.toReviewResponse(savedReview)
     }
 
