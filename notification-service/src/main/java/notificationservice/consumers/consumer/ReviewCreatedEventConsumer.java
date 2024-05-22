@@ -30,7 +30,7 @@ public class ReviewCreatedEventConsumer {
                         "for message key: {}",
                 eventData, consumerRecord.partition(), consumerRecord.offset(), Thread.currentThread().getName(), consumerRecord.key());
 
-        NotificationRequest entity = NotificationRequest.from(eventData);
+        NotificationRequest entity = NotificationRequest.from(eventData.getPayload());
 
         notificationService.sendNotification(entity);
 

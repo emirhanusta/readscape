@@ -2,19 +2,13 @@ package notificationservice.consumers.model;
 
 import lombok.*;
 
-import java.util.UUID;
+import java.util.Map;
 
 @Getter
-@Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
 public class ReviewCreatedEvent {
-    private UUID id;
-    private UUID accountId;
-    private UUID bookId;
-    private String review;
-    private float rating;
-    private boolean status;
+    private ReviewCreatedPayload payload;
+    private Map<String, Object> headers;
 }

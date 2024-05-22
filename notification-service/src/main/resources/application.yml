@@ -19,7 +19,7 @@ kafka:
   host: localhost:9092
   topics:
     review-created:
-      topic: review_service.user_created.0
+      topic: review_service.review_created.0
       consumerGroup: ${spring.application.name}-review-created-consumer
-      replicationFactor: 1
-      retentionInMs: 604800000
+      repicationFactor: 1
+      retentionMs: 604800000

@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "kafka.topics.user-created")
+@ConfigurationProperties(prefix = "kafka.topics.review-created")
 @Getter
 @Setter
 public class ReviewCreatedConsumerProperties {
