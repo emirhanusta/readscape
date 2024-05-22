@@ -50,7 +50,7 @@ public class ReviewCreatedKafkaConsumerConfiguration<T> {
         ConcurrentKafkaListenerContainerFactory<String, T> factory
                 = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setMessageConverter(new StringJsonMessageConverter());
+        factory.setRecordMessageConverter(new StringJsonMessageConverter());
         return factory;
     }
 }
