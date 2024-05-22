@@ -1,11 +1,12 @@
 package notificationservice.consumers.consumer;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import notificationservice.consumers.model.ReviewCreatedEvent;
 import notificationservice.dto.NotificationRequest;
 import notificationservice.service.NotificationService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class ReviewCreatedEventConsumer {
+    Logger log = LoggerFactory.getLogger(ReviewCreatedEventConsumer.class);
     private final NotificationService notificationService;
 
     @KafkaListener(topics = "${kafka.topics.review-created.topic}",
