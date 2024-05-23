@@ -21,12 +21,16 @@ import java.util.Map;
 public class TokenService {
 
     @Value("${jwt.Secret-Key}")
-    private String token;
+    private String secretKey;
     @Value("${jwt.Expiration-Time}")
     private Integer expirationTime;
 
+    public final UserService userService;
+
+
     public String generateToken(String username){
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", getRoleFromUser(username));
         return createToken(claims, username);
     }
     
@@ -63,7 +67,11 @@ public class TokenService {
     }
 
     private Key getKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(token);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private String getRoleFromUser(String username){
+        return userService.findByUsername(username).role();
     }
 }

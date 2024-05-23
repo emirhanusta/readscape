@@ -7,26 +7,34 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: account-service
-          uri: lb://account-service
-          predicates:
-            - Path=/api/v1/accounts/**
-        - id: book-service
-          uri: lb://book-service
-          predicates:
-            - Path=/api/v1/books/**
-        - id: author-service
-          uri: lb://author-service
-          predicates:
-            - Path=/api/v1/authors/**
         - id: auth-service
           uri: lb://auth-service
           predicates:
             - Path=/api/v1/auth/**
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/api/v1/accounts/**
+          filters:
+            - name: AuthenticationFilter
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/v1/books/**
+          filters:
+            - name: AuthenticationFilter
+        - id: author-service
+          uri: lb://author-service
+          predicates:
+            - Path=/api/v1/authors/**
+          filters:
+            - name: AuthenticationFilter
         - id: review-service
           uri: lb://review-service
           predicates:
             - Path=/api/v1/reviews/**
+          filters:
+            - name: AuthenticationFilter
       discovery:
         locator:
           enabled: true
@@ -44,3 +52,6 @@ management:
   tracing:
     sampling:
       probability: 1.0
+jwt:
+  Secret-Key: mYiADZOy9Hq5pTfomhj9hPUJLGAN/ZB6AZ4yoHfCtN0f8DaNQr6+4qeaJ9YfMK4ZbX85J3ao6TotW+jrLKLGeafpaYYLn2mmrYOB/1mJzhQYEaf883PtWAIwnTwHpPuEsJAhyHwEtlTvy++pZA+0bns66RUDBk80bJUA4JhJUI8
+  Expiration-Time: 60
