@@ -1,11 +1,13 @@
 package accountservice.service;
 
 import accountservice.client.ReviewServiceClient;
+import accountservice.dto.AccountClientResponse;
 import accountservice.dto.AccountRequest;
 import accountservice.dto.AccountResponse;
 import accountservice.dto.ReviewResponse;
 import accountservice.exception.AccountNotFoundException;
 import accountservice.model.Account;
+import accountservice.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,9 @@ public class AccountService {
         logger.info("Creating account : {}", accountRequest);
         Account account = Account.builder()
                 .username(accountRequest.username())
+                .password(accountRequest.password())
                 .email(accountRequest.email())
+                .role(Role.valueOf(accountRequest.role()))
                 .build();
         accountRepository.save(account);
         return AccountResponse.from(account);
@@ -37,6 +41,12 @@ public class AccountService {
     public AccountResponse getAccountById(UUID id) {
         logger.info("Getting account by id : {}", id);
         return AccountResponse.from(getAccount(id));
+    }
+
+    public AccountClientResponse getAccountByUsername(String username) {
+        logger.info("Getting account by username : {}", username);
+        return AccountClientResponse.from(accountRepository.findByUsername(username)
+                .orElseThrow(() -> new AccountNotFoundException("Account not found with username: " + username)));
     }
 
     public List<ReviewResponse> getReviewsByAccountId(UUID accountId) {
@@ -56,6 +66,10 @@ public class AccountService {
         logger.info("Deleting account with id : {}", id);
         reviewServiceClient.deleteReviewsByAccountId(id);
         accountRepository.delete(getAccount(id));
+    }
+
+    public boolean existsByUsername(String username) {
+        return accountRepository.existsByUsername(username);
     }
 
     private Account getAccount(UUID id) {

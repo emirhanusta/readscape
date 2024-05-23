@@ -15,6 +15,11 @@ import java.security.SignatureException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+        return new ResponseEntity<>(ex.getExceptionMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<Object> handleUserAlreadyExistException(UserAlreadyExistException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);

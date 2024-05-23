@@ -3,6 +3,7 @@ package authservice.security;
 import authservice.service.UserDetailsServiceImpl;
 import authservice.service.TokenService;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,8 +30,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                 @Nonnull HttpServletResponse response,
+                                 @Nonnull FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
         String token = null;

@@ -1,5 +1,6 @@
 package accountservice.model;
 
+import accountservice.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,8 @@ public class Account {
     private UUID id;
     private String username;
     private String email;
+    private String password;
+    private Role role;
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp

@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class TokenService {
 
     @Value("${jwt.Secret-Key}")
@@ -25,16 +23,19 @@ public class TokenService {
     @Value("${jwt.Expiration-Time}")
     private Integer expirationTime;
 
-    public final UserService userService;
+    private final UserService userService;
 
+    public TokenService(UserService userService) {
+        this.userService = userService;
+    }
 
-    public String generateToken(String username){
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", getRoleFromUser(username));
         return createToken(claims, username);
     }
-    
-    public Boolean validateToken(String token, UserDetails userDetails){
+
+    public Boolean validateToken(String token, UserDetails userDetails) {
         String username = getUsernameFromToken(token);
         Date expirationDate = getExpirationDateFromToken(token);
         return username.equals(userDetails.getUsername()) && expirationDate.after(new Date());
@@ -66,12 +67,12 @@ public class TokenService {
                 .compact();
     }
 
-    private Key getKey(){
+    private Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private String getRoleFromUser(String username){
+    private String getRoleFromUser(String username) {
         return userService.findByUsername(username).role();
     }
 }

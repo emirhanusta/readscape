@@ -1,16 +1,13 @@
 package authservice.dto;
 
-import lombok.Builder;
-
 
 import java.util.UUID;
 
-@Builder
-public record UserResponse(
+public record AccountClientResponse(
         UUID id,
         String username,
+        String password,
         String email,
         String role
 ) {
 }
-

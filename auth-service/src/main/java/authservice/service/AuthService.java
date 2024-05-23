@@ -5,10 +5,7 @@ import authservice.dto.RegisterRequest;
 import authservice.dto.TokenResponse;
 import authservice.exception.UserAlreadyExistException;
 import authservice.dto.UserResponse;
-import authservice.model.Role;
-import authservice.model.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthService {
     Logger logger = LoggerFactory.getLogger(AuthService.class);
 
@@ -28,16 +24,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     public UserResponse register(RegisterRequest request) {
-        logger.info("Registering user: {}", request);
-        log.info("Registering user: {}", request.username());
-        if (userService.existsByUsername(request.username())) {
+        logger.info("Registering user: {}", request.getUsername());
+        if (userService.existsByUsername(request.getUsername())) {
             throw new UserAlreadyExistException("Username already exists");
         }
-        return userService.saveUser(User.builder()
-                .username(request.username())
-                .password(passwordEncoder.encode(request.password()))
-                .role(Role.valueOf(request.role()))
-                .build());
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        logger.info("Saving user: {}", request);
+        return userService.saveUser(request);
     }
 
     public TokenResponse login(LoginRequest request) {

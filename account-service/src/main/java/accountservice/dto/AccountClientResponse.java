@@ -4,18 +4,20 @@ import accountservice.model.Account;
 
 import java.util.UUID;
 
-public record AccountResponse(
+public record AccountClientResponse(
         UUID id,
         String username,
+        String password,
         String email,
         String role
 ) {
-    public static AccountResponse from(Account account) {
-        return new AccountResponse(
+    public static AccountClientResponse from(Account account) {
+        return new AccountClientResponse(
                 account.getId(),
                 account.getUsername(),
+                account.getPassword(),
                 account.getEmail(),
-                account.getRole().name()
+                account.getRole().toString()
         );
     }
 }

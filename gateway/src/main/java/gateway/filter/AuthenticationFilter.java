@@ -33,7 +33,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            if (validator.isRequestSecured(request, RouteValidator.openApiEndpoints)) {
+            if (validator.isRequestSecured(request)) {
                 if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     throw new CustomException("Authorization header is missing", HttpStatus.UNAUTHORIZED);
                 }
@@ -61,8 +61,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     private void validateRole(String authHeader, ServerHttpRequest request) {
         Claims claims = jwtUtil.getClaims(authHeader);
-        if (!claims.get("role").equals("ADMIN") && validator.isRequestSecured(request, RouteValidator.requiredAdminRoleEndpoints)) {
-            log.error("Admin role required for this endpoint");
+        if (!claims.get("role").equals("ADMIN") && validator.isAdminRoleRequired(request)) {
+            log.error("Admin role required for this endpoint {}", request.getURI().getPath());
             throw new CustomException("Admin role required", HttpStatus.FORBIDDEN);
         }
     }

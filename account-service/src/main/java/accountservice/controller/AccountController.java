@@ -1,5 +1,6 @@
 package accountservice.controller;
 
+import accountservice.dto.AccountClientResponse;
 import accountservice.dto.AccountRequest;
 import accountservice.dto.AccountResponse;
 import accountservice.dto.ReviewResponse;
@@ -28,9 +29,19 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccountById(id));
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<AccountClientResponse> getByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(accountService.getAccountByUsername(username));
+    }
+
     @GetMapping("/{accountId}/reviews")
     public ResponseEntity<List<ReviewResponse>> getReviewsByAccountId(@PathVariable UUID accountId) {
         return ResponseEntity.ok(accountService.getReviewsByAccountId(accountId));
+    }
+
+    @GetMapping("/isExist/{username}")
+    public ResponseEntity<Boolean> isExist(@PathVariable String username) {
+        return ResponseEntity.ok(accountService.existsByUsername(username));
     }
 
     @PutMapping("/{id}")

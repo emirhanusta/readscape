@@ -1,29 +1,33 @@
 package authservice.service;
 
+import authservice.client.AccountServiceClient;
+import authservice.dto.RegisterRequest;
 import authservice.dto.UserResponse;
-import authservice.exception.UserNotFoundException;
-import authservice.model.User;
-import authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final AccountServiceClient accountServiceClient;
 
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    protected UserResponse saveUser(User user) {
-        return UserResponse.from(userRepository.save(user));
+    protected UserResponse saveUser(RegisterRequest register) {
+        return accountServiceClient.createAccount(register).getBody();
     }
 
     protected UserResponse findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .map(UserResponse::from)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        return UserResponse.builder()
+                .id(Objects.requireNonNull(accountServiceClient.getByUsername(username).getBody()).id())
+                .username(username)
+                .email(Objects.requireNonNull(accountServiceClient.getByUsername(username).getBody()).email())
+                .role(Objects.requireNonNull(accountServiceClient.getByUsername(username).getBody()).role())
+                .build();
+    }
+
+    public boolean existsByUsername(String username) {
+        return Boolean.TRUE.equals(accountServiceClient.isExist(username).getBody());
     }
 }
