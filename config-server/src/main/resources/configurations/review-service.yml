@@ -27,3 +27,12 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+kafka:
+  host: localhost:9092
+  topics:
+    review-created:
+      topicName: ${spring.application.name}.review_created.0
+      partitionCount: 1
+      replicationFactor: 1
+      retentionInMs: 604800000
