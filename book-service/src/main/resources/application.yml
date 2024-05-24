@@ -1,5 +1,71 @@
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookDB
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
   application:
     name: book-service
+  zipkin:
+    base-url: http://localhost:9411
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 1000
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          min-idle: 0
+          max-idle: 8
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+      time-to-live: 60000
   config:
-    import: optional:configserver:http://localhost:9191/
+    import: optional:vault://
+  cloud:
+    vault:
+      enabled: true
+      uri: http://localhost:8200
+      authentication: TOKEN
+      token: ${vault-token}
+      kv:
+        enabled: true
+        default-context: book-service
+        backend: readscape
+
+server:
+  port: 0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+aws:
+  access:
+    key: ${aws-access-key}
+  secret:
+    key: ${aws-secret-key}
+  s3:
+    bucket: ${aws-s3-bucket}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0

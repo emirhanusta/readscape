@@ -30,11 +30,6 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-		<!-- config server -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-		</dependency>
 		<!-- eureka client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

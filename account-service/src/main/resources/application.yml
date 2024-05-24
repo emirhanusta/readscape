@@ -1,5 +1,29 @@
 spring:
   application:
     name: account-service
-  config:
-    import: optional:configserver:http://localhost:9191/
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/accountDB
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  zipkin:
+    base-url: http://localhost:9411
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+server:
+  port: 0
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

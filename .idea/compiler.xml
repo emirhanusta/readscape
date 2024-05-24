@@ -7,7 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="config-server" />
         <module name="auth-service" />
         <module name="book-service" />
         <module name="account-service" />
@@ -17,6 +16,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="config-server" target="17" />
       <module name="library-service" target="17" />
     </bytecodeTargetLevel>
   </component>

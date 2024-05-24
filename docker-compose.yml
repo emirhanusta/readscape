@@ -56,6 +56,34 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9093
       - KAFKA_CLUSTERS_0_ZOOKEEPER=localhost:2181
 
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8080:8080"
+    environment:
+      SWAGGER_JSON: /swagger/swagger.yml
+    volumes:
+      - ./swagger:/swagger
+
+  vault:
+    image: vault:1.13.3
+    healthcheck:
+      retries: 5
+      test: ["CMD", "vault", "status"]
+    restart: always
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: 'https://0.0.0.0:8200'
+      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8200","tls_disable":"1"}}], "ui": true, "storage": [{"file": {"path":"/vault/data"}}]}'
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/data:/vault/data
+    command: vault server -config vault/config/local.json
+
 volumes:
   zookeeper_data:
     driver: local

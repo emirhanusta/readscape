@@ -34,11 +34,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-		<!-- config server -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-		</dependency>
+
 		<!-- zipkin -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -129,6 +125,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+	<finalName>auth-service</finalName>
 	</build>
 
 </project>
