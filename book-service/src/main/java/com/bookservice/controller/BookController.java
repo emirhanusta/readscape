@@ -4,9 +4,13 @@ import com.bookservice.dto.BookRequest;
 import com.bookservice.dto.BookResponse;
 import com.bookservice.dto.ReviewResponse;
 import com.bookservice.service.BookService;
+import com.bookservice.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +21,29 @@ import java.util.UUID;
 public class BookController {
 
     private final BookService bookService;
+    private final S3Service s3Service;
 
+    @PostMapping("/images/{id}")
+    public ResponseEntity<InputStreamResource> saveImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .header("Content-Disposition", "attachment; filename=" + id.toString() + ".png")
+                .body(s3Service.saveImage(id, file));
+    }
+
+    @GetMapping("/images/{id}")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable UUID id) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .header("Content-Disposition", "attachment; filename=" + id.toString() + ".png")
+                .body(s3Service.viewImage(id));
+    }
+
+    @DeleteMapping("/images/{id}")
+    public ResponseEntity<Void> deleteImage(@PathVariable UUID id) {
+        s3Service.deleteImage(id);
+        return ResponseEntity.noContent().build();
+    }
     @PostMapping
     public ResponseEntity<BookResponse> addNewBook(@RequestBody BookRequest book) {
         return ResponseEntity.ok(bookService.addNewBook(book));

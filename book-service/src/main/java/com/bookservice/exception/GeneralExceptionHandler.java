@@ -18,4 +18,9 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAuthorNotFoundException(NotFoundException ex) {
         return new ResponseEntity<>(ex.getExceptionMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(S3Exception.class)
+    public ResponseEntity<Object> handleS3Exception(S3Exception ex) {
+        return new ResponseEntity<>(ex.getMessage(), ex.status);
+    }
 }

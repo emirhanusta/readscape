@@ -33,7 +33,6 @@ public class BookService {
 
     @CacheEvict(value = "books", allEntries = true)
     public BookResponse addNewBook(BookRequest book) {
-        log.info("Adding new book; {}", book);
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
         Book newBook = Book.builder()
                 .authorId(book.authorId())
@@ -43,6 +42,7 @@ public class BookService {
                 .publishedDate(book.publishedDate())
                 .build();
         bookRepository.save(newBook);
+        log.info("New book added with name: {}", newBook.getTitle());
         return BookResponse.toDto(newBook);
     }
 
@@ -52,7 +52,7 @@ public class BookService {
         return BookResponse.toDto(findBookById(id));
     }
 
-    @Cacheable(value = "books", key = "#root.methodName", unless = "#result == null")
+    //@Cacheable(value = "books", key = "#root.methodName", unless = "#result == null")
     public List<BookResponse> getAllBooks() {
         log.info("Fetching all books");
         return bookRepository.findAll()

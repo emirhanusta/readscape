@@ -3,10 +3,12 @@ package com.bookservice.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
+import com.bookservice.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +29,7 @@ public class S3Service {
         try {
             uploadFile(id.toString() + ".png", file);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to upload file to S3", e);
+            throw new S3Exception("An error occurred while uploading file to S3", HttpStatus.BAD_REQUEST);
         }
         return viewImage(id);
     }
@@ -35,7 +37,7 @@ public class S3Service {
     public InputStreamResource viewImage(UUID id) {
         var s3Object = getFile(id.toString() + ".png");
         if (s3Object == null) {
-            throw new RuntimeException("File not found in S3");
+            throw new S3Exception("Image not found in S3", HttpStatus.NOT_FOUND);
         }
         var content = s3Object.getObjectContent();
         return new InputStreamResource(content);
@@ -43,7 +45,7 @@ public class S3Service {
 
     public void deleteImage(UUID id) {
         if (id == null) {
-            throw new RuntimeException("Id cannot be null");
+            throw new S3Exception("Id cannot be null", HttpStatus.BAD_REQUEST);
         }
         if (getFile(id + ".png") != null) {
             deleteFile(id + ".png");
