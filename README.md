@@ -1,3 +1,3 @@
 <h1>This project under development</h1>
 
-![image](https://github.com/emirhanusta/readscape/assets/83432342/a957cf4d-3d33-453f-8d65-ff146ee8d315)
+![image](https://github.com/emirhanusta/readscape/assets/83432342/8df56482-742f-43fc-8c89-3d835c3d7b00)
