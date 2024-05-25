@@ -26,12 +26,12 @@ public class RouteValidator {
           put("/api/v1/authors", List.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE));
      }};
 
-    public boolean isRequestSecured(ServerHttpRequest request ) {
+    protected boolean securityFilter(ServerHttpRequest request, Map<String, List<HttpMethod>> endpoints) {
         String path = request.getURI().getPath();
         HttpMethod method = request.getMethod();
         log.info("Request Path: {}, Method: {}", path, method);
 
-        for (Map.Entry<String, List<HttpMethod>> entry : openApiEndpoints.entrySet()) {
+        for (Map.Entry<String, List<HttpMethod>> entry : endpoints.entrySet()) {
             String endpoint = entry.getKey();
             List<HttpMethod> allowedMethods = entry.getValue();
 
@@ -40,21 +40,5 @@ public class RouteValidator {
             }
         }
         return true;
-    }
-
-    public boolean isAdminRoleRequired(ServerHttpRequest request) {
-        String path = request.getURI().getPath();
-        HttpMethod method = request.getMethod();
-        log.info("Request Path: {}, Method: {}", path, method);
-
-        for (Map.Entry<String, List<HttpMethod>> entry : requiredAdminRoleEndpoints.entrySet()) {
-            String endpoint = entry.getKey();
-            List<HttpMethod> allowedMethods = entry.getValue();
-
-            if (path.contains(endpoint) && allowedMethods.contains(method)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
