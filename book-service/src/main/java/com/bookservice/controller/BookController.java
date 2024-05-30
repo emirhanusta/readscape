@@ -63,7 +63,7 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
     }
 
-    @GetMapping("/{bookId}/reviews")
+    @GetMapping("/reviews/{bookId}")
     public ResponseEntity<List<ReviewResponse>> getReviewsByBookId(@PathVariable UUID bookId) {
         return ResponseEntity.ok(bookService.getReviewsByBookId(bookId));
     }

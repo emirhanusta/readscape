@@ -34,7 +34,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccountByUsername(username));
     }
 
-    @GetMapping("/{accountId}/reviews")
+    @GetMapping("/reviews/{accountId}")
     public ResponseEntity<List<ReviewResponse>> getReviewsByAccountId(@PathVariable UUID accountId) {
         return ResponseEntity.ok(accountService.getReviewsByAccountId(accountId));
     }

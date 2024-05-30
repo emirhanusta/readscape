@@ -20,7 +20,7 @@ class AuthorController(val authorService: AuthorService) {
     fun getAuthorById(@PathVariable id: UUID) : ResponseEntity<AuthorResponse> =
         ResponseEntity.ok(authorService.getById(id))
 
-    @GetMapping("/{id}/books")
+    @GetMapping("/books/{id}")
     fun getBooksByAuthor(@PathVariable id: UUID) : ResponseEntity<List<BookResponse>> =
         authorService.getBooksByAuthor(id)
 
