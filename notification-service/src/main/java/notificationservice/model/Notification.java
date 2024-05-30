@@ -24,7 +24,6 @@ public class Notification {
     @GeneratedValue(generator = "UUID")
     private UUID id;
     private UUID accountId;
-    private UUID reviewId;
     private String message;
     @CreationTimestamp
     private LocalDateTime createdAt;

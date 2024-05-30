@@ -17,10 +17,9 @@ public class NotificationService {
     }
 
     public void sendNotification(NotificationRequest request) {
-        log.info("Sending notification for account {} and review {}", request.accountId(), request.reviewId());
+        log.info("Sending notification for account {} with message {}", request.accountId(), request.message());
         Notification notification = Notification.builder()
                 .accountId(request.accountId())
-                .reviewId(request.reviewId())
                 .message(request.message())
                 .build();
         notificationRepository.save(notification);
