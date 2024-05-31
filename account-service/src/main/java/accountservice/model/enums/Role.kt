@@ -1,5 +1,5 @@
-package accountservice.model.enums;
+package accountservice.model.enums
 
-public enum Role {
-    ADMIN,USER
+enum class Role {
+    ADMIN, USER
 }

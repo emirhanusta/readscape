@@ -1,6 +1,6 @@
-package com.bookservice.model.enums;
+package com.bookservice.model.enums
 
-public enum BookGenres {
+enum class BookGenres {
     Novel,
     Horror,
     Fantasy,
@@ -15,5 +15,4 @@ public enum BookGenres {
     Poetry,
     Drama,
     Comedy,
-
 }

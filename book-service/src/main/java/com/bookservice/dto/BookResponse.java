@@ -1,6 +1,10 @@
 package com.bookservice.dto;
 
 import com.bookservice.model.Book;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,6 +17,8 @@ public record BookResponse (
         String title,
         String description,
         List<String> genres,
+        @JsonSerialize(using = LocalDateSerializer.class)
+        @JsonDeserialize(using = LocalDateDeserializer.class)
         LocalDate publishedDate
 )implements Serializable{
     public static BookResponse toDto(Book book){

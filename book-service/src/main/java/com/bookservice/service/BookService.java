@@ -9,7 +9,6 @@ import com.bookservice.exception.BookNotFoundException;
 import com.bookservice.model.Book;
 import com.bookservice.repository.BookRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class BookService {
 
     Logger log = LoggerFactory.getLogger(BookService.class);
@@ -31,16 +29,25 @@ public class BookService {
     private final AuthorServiceClient authorServiceClient;
     private final ReviewServiceClient reviewServiceClient;
 
+    public BookService(BookRepository bookRepository, S3Service s3Service,
+                       AuthorServiceClient authorServiceClient, ReviewServiceClient reviewServiceClient) {
+        this.bookRepository = bookRepository;
+        this.s3Service = s3Service;
+        this.authorServiceClient = authorServiceClient;
+        this.reviewServiceClient = reviewServiceClient;
+    }
+
     @CacheEvict(value = "books", allEntries = true)
     public BookResponse addNewBook(BookRequest book) {
         authorServiceClient.getAuthorById(book.authorId()); // check if author exists (throws exception if not found)
-        Book newBook = Book.builder()
-                .authorId(book.authorId())
-                .title(book.title())
-                .description(book.description())
-                .genres(book.genres())
-                .publishedDate(book.publishedDate())
-                .build();
+        Book newBook = new Book(
+                book.title(),
+                book.authorId(),
+                book.description(),
+                book.genres(),
+                book.publishedDate()
+        );
+
         bookRepository.save(newBook);
         log.info("New book added with name: {}", newBook.getTitle());
         return BookResponse.toDto(newBook);

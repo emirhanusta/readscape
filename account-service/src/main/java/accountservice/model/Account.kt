@@ -1,32 +1,26 @@
-package accountservice.model;
+package accountservice.model
 
-import accountservice.model.enums.Role;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import accountservice.model.enums.Role
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.sql.Timestamp
+import java.util.UUID
 
-import java.sql.Timestamp;
-import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
-public class Account {
+data class Account @JvmOverloads constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    private String username;
-    private String email;
-    private String password;
-    private Role role;
+    val id: UUID? = null,
+    @Column(unique = true)
+    var username: String,
+    var email: String,
+    val password: String,
+    @Enumerated(EnumType.ORDINAL)
+    val role: Role,
     @CreationTimestamp
-    private Timestamp createdAt;
+    val createdAt: Timestamp? = null,
     @UpdateTimestamp
-    private Timestamp updatedAt;
-}
+    val updatedAt: Timestamp? = null
+)

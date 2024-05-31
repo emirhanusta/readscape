@@ -8,17 +8,15 @@ import accountservice.dto.ReviewResponse;
 import accountservice.exception.AccountNotFoundException;
 import accountservice.model.Account;
 import accountservice.model.enums.Role;
-import lombok.RequiredArgsConstructor;
+import accountservice.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import accountservice.repository.AccountRepository;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class AccountService {
 
     Logger logger = LoggerFactory.getLogger(AccountService.class);
@@ -26,14 +24,19 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final ReviewServiceClient reviewServiceClient;
 
+    public AccountService(AccountRepository accountRepository, ReviewServiceClient reviewServiceClient) {
+        this.accountRepository = accountRepository;
+        this.reviewServiceClient = reviewServiceClient;
+    }
+
     public AccountResponse createAccount(AccountRequest accountRequest) {
         logger.info("Creating account : {}", accountRequest);
-        Account account = Account.builder()
-                .username(accountRequest.username())
-                .password(accountRequest.password())
-                .email(accountRequest.email())
-                .role(Role.valueOf(accountRequest.role()))
-                .build();
+        Account account = new Account(
+                accountRequest.username(),
+                accountRequest.email(),
+                accountRequest.password(),
+                accountRequest.role() == null ? Role.USER : Role.valueOf(accountRequest.role())
+        );
         accountRepository.save(account);
         return AccountResponse.from(account);
     }
@@ -53,6 +56,7 @@ public class AccountService {
         logger.info("Getting reviews by account id : {}", accountId);
         return reviewServiceClient.getReviewsByAccountId(accountId).getBody();
     }
+
     public AccountResponse updateAccount(UUID id, AccountRequest accountRequest) {
         logger.info("Updating account with id : {} and request : {}", id, accountRequest);
         Account account = getAccount(id);

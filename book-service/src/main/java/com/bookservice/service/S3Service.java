@@ -4,8 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
 import com.bookservice.exception.S3Exception;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,17 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-@Log4j2
-@RequiredArgsConstructor
 public class S3Service {
 
+    Logger log = LoggerFactory.getLogger(S3Service.class);
     private final AmazonS3 s3Client;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
+
+    public S3Service(AmazonS3 s3Client) {
+        this.s3Client = s3Client;
+    }
 
     public InputStreamResource saveImage(UUID id, MultipartFile file) {
         try {
@@ -53,7 +56,7 @@ public class S3Service {
     }
     private void uploadFile(String key, MultipartFile file) throws IOException {
         var putObjectResult = s3Client.putObject(bucketName, key, file.getInputStream(), null);
-        log.info(putObjectResult.getMetadata());
+        log.info(String.valueOf(putObjectResult.getMetadata()));
     }
     private S3Object getFile(String key) {
         try {

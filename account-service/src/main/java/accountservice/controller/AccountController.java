@@ -5,7 +5,7 @@ import accountservice.dto.AccountRequest;
 import accountservice.dto.AccountResponse;
 import accountservice.dto.ReviewResponse;
 import accountservice.service.AccountService;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +14,16 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
-@RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
 
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
+
     @PostMapping
-    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountResponse> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
         return ResponseEntity.ok(accountService.createAccount(accountRequest));
     }
 
