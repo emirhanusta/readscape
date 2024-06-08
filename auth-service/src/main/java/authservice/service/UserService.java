@@ -1,6 +1,7 @@
 package authservice.service;
 
 import authservice.client.AccountServiceClient;
+import authservice.dto.AccountClientResponse;
 import authservice.dto.RegisterRequest;
 import authservice.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,12 @@ public class UserService {
     }
 
     protected UserResponse findByUsername(String username) {
+        AccountClientResponse account = accountServiceClient.getByUsername(username).getBody();
         return UserResponse.builder()
-                .id(Objects.requireNonNull(accountServiceClient.getByUsername(username).getBody()).id())
+                .id(Objects.requireNonNull(account).id())
                 .username(username)
-                .email(Objects.requireNonNull(accountServiceClient.getByUsername(username).getBody()).email())
-                .role(Objects.requireNonNull(accountServiceClient.getByUsername(username).getBody()).role())
+                .email(Objects.requireNonNull(account.email()))
+                .role(Objects.requireNonNull(account.role()))
                 .build();
     }
 
