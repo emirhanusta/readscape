@@ -39,6 +39,7 @@ class ReviewService(val reviewRepository: ReviewRepository,
             .let { ReviewResponse.toReviewResponse(it) }
     }
 
+    @Transactional
     fun getReviewsByBookId(bookId: UUID): MutableList<ReviewResponse> {
         logger.info("Fetching reviews for book with id: $bookId")
         bookServiceClient.getBookById(bookId) // Check if book exists
@@ -47,6 +48,7 @@ class ReviewService(val reviewRepository: ReviewRepository,
             .toMutableList()
     }
 
+    @Transactional
     fun getReviewsByAccountId(userId: UUID): MutableList<ReviewResponse> {
         logger.info("Fetching reviews for account with id: $userId")
         accountServiceClient.getAccountById(userId) // Check if account exists
