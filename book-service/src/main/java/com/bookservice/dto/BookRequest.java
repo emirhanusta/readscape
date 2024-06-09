@@ -9,7 +9,6 @@ import java.util.UUID;
 public record BookRequest(
         UUID authorId,
         String title,
-        String isbn,
         String description,
         List<BookGenres> genres,
         LocalDate publishedDate

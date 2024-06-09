@@ -15,6 +15,7 @@ data class Book @JvmOverloads constructor(
     val id: UUID? = null,
     var title: String,
     var authorId: UUID,
+    @Lob
     var description: String,
     @ElementCollection(targetClass = BookGenres::class)
     @Enumerated(EnumType.STRING)

@@ -69,6 +69,7 @@ public class BookService {
     }
 
     @Cacheable(value = "author_books", key = "#root.methodName + #authorId", unless = "#result.size() == 0")
+    @Transactional
     public List<BookResponse> getBooksByAuthorId(UUID authorId) {
         log.info("Fetching books by author with id: {}", authorId);
         authorServiceClient.getAuthorById(authorId); // check if author exists (throws exception if not found)
