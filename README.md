@@ -38,6 +38,8 @@ The system consists of several microservices, each handling a specific domain of
 - Synchronous communication between services is handled using Feign Client.
 - Asynchronous communication between Review and Notification services is managed using Kafka.
 
+![kafka 2024-06-09 155502](https://github.com/emirhanusta/readscape/assets/83432342/c3345a48-db82-4ddd-9fed-33bfda7be174)
+
 ### Security
 
 - **JWT**: JSON Web Tokens are used for authentication and authorization.
@@ -625,3 +627,22 @@ if review exists response will be like this:
 
 This service sends email to user when a review is added to a book. It listens to review added event. 
 
+```
+{
+	"payload": {
+		"id": "287a0ddf-6ff3-4e58-96f3-185697a96158",
+		"accountId": "86abedd0-6c83-4b6a-93f8-a33ceed3fff2",
+		"bookId": "d8e13ab5-d303-4c1c-b281-f4480ec0366d",
+		"rating": 7.5,
+		"review": "this book is amazing",
+		"createdAt": [2024,6,9,15,6,41,258502000],
+		"updatedAt": [2024,6,9,15,6,41,258502000]
+	},
+	"headers": {
+		"topic": "review-service.review_created.0",
+		"messageKey": "287a0ddf-6ff3-4e58-96f3-185697a96158",
+		"id": "6c3d5b85-965a-6beb-c377-9168f67aa6db",
+		"timestamp": 1717934801326
+	}
+}
+```
