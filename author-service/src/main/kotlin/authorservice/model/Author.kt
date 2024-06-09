@@ -4,6 +4,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Lob
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
@@ -16,6 +17,7 @@ data class Author(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
     var name: String,
+    @Lob
     var biography: String,
     var birthDate: LocalDate,
     @CreationTimestamp
