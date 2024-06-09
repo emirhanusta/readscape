@@ -32,12 +32,13 @@ The system consists of several microservices, each handling a specific domain of
 - **Author Service**: Manages author details, including adding, updating, deleting, and listing author books..
 - **Review Service**: Allows users to write and view book reviews.
 - **Notification Service**: Sends notifications to users about important events.
-
+- **Gateway**: Acts as an API gateway for the system, handling requests and routing them to the appropriate services.
+- **Config Server**: Manages configuration properties for all services.
+- **Eureka Server**: Manages service discovery and registration.
 ### Communication
 
 - Synchronous communication between services is handled using Feign Client.
 - Asynchronous communication between Review and Notification services is managed using Kafka.
-
 ![kafka 2024-06-09 155502](https://github.com/emirhanusta/readscape/assets/83432342/c3345a48-db82-4ddd-9fed-33bfda7be174)
 
 ### Security
@@ -45,14 +46,20 @@ The system consists of several microservices, each handling a specific domain of
 - **JWT**: JSON Web Tokens are used for authentication and authorization.
 - **Spring Security**: Provides security features such as authentication and authorization.
 - **Vault**: Used for storing sensitive information such as database credentials and JWT secret
-
 ![vault 2024-06-09 154922](https://github.com/emirhanusta/readscape/assets/83432342/1446feee-0882-49ad-bb87-496a7e8dda12)
 
 ### Monitoring
 
 - **Zipkin**: Used for distributed tracing.
-
 ![zipkin 2024-06-09 151433](https://github.com/emirhanusta/readscape/assets/83432342/da0c431c-6c66-4538-9fcc-532119e40568)
+
+### Data Storage
+
+- **Redis**: Used for caching user data.
+- **Amazon S3**: Used for storing book images.
+- **PostgreSQL**: Used for storing user, book, author, and review data.
+
+![database 2024-06-09 161740](https://github.com/emirhanusta/readscape/assets/83432342/d5429a46-1bf0-446f-9f07-e4285c77b3f0)
 
 ## Endpoints
 
