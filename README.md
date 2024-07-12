@@ -55,7 +55,7 @@ The system consists of several microservices, each handling a specific domain of
 
 ### Data Storage
 
-- **Redis**: Used for caching user data.
+- **Redis**: Used for caching books data.
 - **Amazon S3**: Used for storing book images.
 - **PostgreSQL**: Used for storing user, book, author, and review data.
 
